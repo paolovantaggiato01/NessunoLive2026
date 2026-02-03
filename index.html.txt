@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NESSUNO</title>
+
+  <style>
+    :root{
+      --bg1:#120814;
+      --bg2:#3b2537;
+      --gold:#f3c28b;
+      --card: rgba(0,0,0,.30);
+      --stroke: rgba(243,194,139,.20);
+      --shadow: rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--gold);
+      overflow:hidden;
+      background: radial-gradient(1200px 800px at 50% 20%, var(--bg2), var(--bg1));
+    }
+
+    /* --- Background image (your poster) --- */
+    .bg{
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(18,8,20,.78), rgba(18,8,20,.82)),
+        url("bg.png") center / cover no-repeat;
+      transform: translate3d(0,0,0);
+      will-change: transform;
+      filter: saturate(1.05) contrast(1.02);
+      z-index:0;
+    }
+
+    /* subtle animated glow on top */
+    .glow {
+      position:fixed;
+      inset:-20%;
+      pointer-events:none;
+      filter: blur(50px);
+      opacity:.55;
+      transform: translateZ(0);
+      animation: drift 14s ease-in-out infinite alternate;
+      background:
+        radial-gradient(600px 420px at 35% 30%, rgba(243,194,139,.20), transparent 60%),
+        radial-gradient(680px 520px at 75% 70%, rgba(203,120,255,.15), transparent 62%),
+        radial-gradient(520px 420px at 20% 82%, rgba(255,90,130,.10), transparent 60%);
+      z-index:1;
+    }
+    @keyframes drift{
+      0%   {transform: translate(-2%, -1%) scale(1);}
+      50%  {transform: translate(2%, 2%)  scale(1.03);}
+      100% {transform: translate(3%, -2%) scale(1.05);}
+    }
+
+    /* particles */
+    canvas#fx{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:2;
+      pointer-events:none;
+    }
+
+    /* Center layout */
+    .wrap{
+      position:relative;
+      z-index:3;
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card{
+      width:100%;
+      max-width:520px;
+      text-align:center;
+      padding:34px 22px 26px;
+      border-radius:24px;
+      background: var(--card);
+      border:1px solid var(--stroke);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 60px var(--shadow);
+      transform: translateY(10px);
+      opacity:0;
+      animation: enter .55s ease-out .05s forwards;
+    }
+    @keyframes enter{
+      to{opacity:1; transform: translateY(0);}
+    }
+
+    h1{
+      margin:0;
+      letter-spacing:2px;
+      font-size:46px;
+      font-weight:900;
+      text-transform:uppercase;
+      text-shadow: 0 10px 22px rgba(0,0,0,.35);
+    }
+
+    /* Float animation shared */
+    @keyframes floaty{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-6px); }
+    }
+
+    /* Logo N in SVG (stile simile al tuo) */
+    .logoSvg{
+      width: 118px;
+      height: auto;
+      margin: 12px auto 22px;
+      display:block;
+      filter: drop-shadow(0 14px 22px rgba(0,0,0,.45));
+      animation: floaty 3.6s ease-in-out infinite;
+      user-select:none;
+    }
+    .logoSvg .stroke{
+      fill: none;
+      stroke: url(#goldGrad);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 16px rgba(243,194,139,.22));
+    }
+    .logoSvg .thin{
+      stroke-width: 6;
+      opacity:.9;
+    }
+
+    .btn{
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      width:100%;
+      padding:14px 16px;
+      margin:14px 0;
+      border-radius:999px;
+      border:2px solid var(--gold);
+      color:var(--gold);
+      text-decoration:none;
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.3px;
+      background: rgba(0,0,0,.10);
+      transition: transform .12s ease, background .15s ease, color .15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover{ background: var(--gold); color: var(--bg1); }
+    .btn:active{ transform: scale(0.985); }
+
+    /* ripple effect */
+    .ripple{
+      position:absolute;
+      border-radius:50%;
+      transform: scale(0);
+      animation: ripple .6s ease-out;
+      background: rgba(255,255,255,.35);
+      pointer-events:none;
+    }
+    @keyframes ripple{
+      to{ transform: scale(10); opacity:0; }
+    }
+
+    .mini{
+      margin-top:10px;
+      font-size:12px;
+      opacity:.72;
+      line-height:1.35;
+    }
+
+    @media (max-width:420px){
+      h1{font-size:40px}
+      .logoSvg{width:110px}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- BACKGROUND (metti la tua immagine e chiamala bg.png) -->
+  <div class="bg" id="bg"></div>
+  <div class="glow"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <main class="card" role="main" aria-label="Nessuno links">
+      <h1>NESSUNO</h1>
+
+      <!-- LOGO N in SVG (oro) -->
+      <svg class="logoSvg" viewBox="0 0 300 180" aria-label="Logo N" role="img">
+        <defs>
+          <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f3c28b"/>
+            <stop offset="0.5" stop-color="#ffe1b7"/>
+            <stop offset="1" stop-color="#d8a86f"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Swoosh esterno -->
+        <path class="stroke thin"
+              d="M35,92
+                 C52,35 102,18 150,25
+                 C205,33 246,70 255,112
+                 C263,149 234,165 198,160
+                 C154,154 120,128 92,112
+                 C63,95 45,90 35,92" />
+
+        <!-- N corsiva -->
+        <path class="stroke"
+              d="M95,132
+                 C86,93 90,58 108,50
+                 C125,43 132,70 139,92
+                 C148,121 156,137 170,132
+                 C186,126 190,90 199,63
+                 C206,41 219,32 236,38
+                 C255,46 248,82 236,120" />
+      </svg>
+
+      <a class="btn" data-ripple
+         href="https://open.spotify.com/artist/35ReHoGfnoTWT9lJJpEVkU?si=SFh0xTghSputvzPkAXGAtg"
+         target="_blank" rel="noopener">
+        🎵 ASCOLTA SU SPOTIFY
+      </a>
+
+      <a class="btn" data-ripple
+         href="https://www.eventbrite.it/e/nessuno-tickets-1981791482673?aff=oddtdtcreator"
+         target="_blank" rel="noopener">
+        🎫 ACQUISTA BIGLIETTO
+      </a>
+
+      <div class="mini">Tap sui bottoni per l’effetto ripple ✨</div>
+    </main>
+  </div>
+
+  <script>
+    // Ripple
+    document.querySelectorAll('[data-ripple]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
+
+        btn.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove());
+      }, {passive:true});
+    });
+
+    // Parallax background (gentle)
+    const bg = document.getElementById('bg');
+    let targetX = 0, targetY = 0, curX = 0, curY = 0;
+
+    function onMove(e){
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) / innerWidth - 0.5;
+      const y = (e.touches ? e.touches[0].clientY : e.clientY) / innerHeight - 0.5;
+      targetX = x * 14;
+      targetY = y * 14;
+    }
+    addEventListener('mousemove', onMove, {passive:true});
+    addEventListener('touchmove', onMove, {passive:true});
+
+    function parallaxTick(){
+      curX += (targetX - curX) * 0.06;
+      curY += (targetY - curY) * 0.06;
+      bg.style.transform = `translate3d(${curX}px, ${curY}px, 0) scale(1.03)`;
+      requestAnimationFrame(parallaxTick);
+    }
+    parallaxTick();
+
+    // Particles (minimal & light)
+    const canvas = document.getElementById('fx');
+    const ctx = canvas.getContext('2d');
+    let w, h, dpr, particles;
+
+    function resize(){
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      w = canvas.width = Math.floor(innerWidth * dpr);
+      h = canvas.height = Math.floor(innerHeight * dpr);
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+
+      const count = Math.floor((innerWidth * innerHeight) / 19000);
+      particles = Array.from({length: Math.max(28, Math.min(80, count))}, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: (Math.random() * 1.6 + 0.6) * dpr,
+        vx: (Math.random() * 0.42 + 0.08) * dpr,
+        vy: (Math.random() * 0.22 + 0.05) * dpr,
+        a: Math.random() * 0.32 + 0.08
+      }));
+    }
+
+    function tick(){
+      ctx.clearRect(0,0,w,h);
+
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if(p.x > w + 40) p.x = -40;
+        if(p.y > h + 40) p.y = -40;
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(243,194,139,${p.a})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(tick);
+    }
+
+    addEventListener('resize', resize);
+    resize(); tick();
+  </script>
+</body>
+</html>
